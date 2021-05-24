@@ -13,21 +13,21 @@ namespace PhpRunnerService
     public interface IPhpRunnerApi<T>
     {
         [Get("/v1.php?table={table}&action=view&editid1={id}")]
-        Task<string> GetItem(string table, string id);
+        Task<string> GetItem(string table, int id);
 
         [Get("/v1.php?table={table}&action=list")]
         Task<string> ListItems(string table);
 
-        [Get("/v1.php?table={table}&action=list&q=({field}~{filter.Value}~{value})")]
-        Task<string> SearchItems(string table, string field, Enum.PhpRunnerFilter filter, string value);
+        [Get("/v1.php?table={table}&action=list&q={value}")]
+        Task<string> SearchItems(string table, string value);
 
         [Post("/v1.php?table={table}&action=update&editid1={id}")]
-        Task<string> UpdateItem(string table, string id, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> obj);
+        Task<string> UpdateItem(string table, int id, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> obj);
 
         [Post("/v1.php?table={table}&action=insert")]
         Task<string> InsertItem(string table, [Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> obj);
 
         [Get("/v1.php?table={table}&action=delete&editid1={id}")]
-        Task<string> DeleteItem(string table, string id);
+        Task<string> DeleteItem(string table, int id);
     }
 }

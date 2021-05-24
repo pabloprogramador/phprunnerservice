@@ -20,7 +20,7 @@ namespace PhpRunnerService
             _httpClient = new HttpClient(new HttpClientHandler()) { BaseAddress = _baseUrl };
         }
         
-        public async Task<T> Get<T>(string id)
+        public async Task<T> Get<T>(int id)
         {
             IPhpRunnerApi<DataPhpRunnerOne<T>> service = RestService.For<IPhpRunnerApi<DataPhpRunnerOne<T>>>(_httpClient);
             var json = await service.GetItem(typeof(T).Name.ToLower(), id).ConfigureAwait(false);
@@ -44,10 +44,15 @@ namespace PhpRunnerService
             return result.Data;
         }
 
-        public async Task<List<T>> Search<T>(string field, Enum.PhpRunnerFilter filter, string value)
+        /// <summary>
+        /// Search PhpRunnerService
+        /// </summary>
+        /// <param name="value">Example: ({id}~{equals}~{1})</param>
+        /// <returns>List<T></returns>
+        public async Task<List<T>> Search<T>(string value)
         {
             IPhpRunnerApi<DataPhpRunnerMany<T>> service = RestService.For<IPhpRunnerApi<DataPhpRunnerMany<T>>>(_httpClient);
-            var json = await service.SearchItems(typeof(T).Name.ToLower(), field, filter, value).ConfigureAwait(false);
+            var json = await service.SearchItems(typeof(T).Name.ToLower(), value).ConfigureAwait(false);
 #if DEBUG
             Console.WriteLine("::::> table: " + typeof(T).Name.ToLower() + " <LIST search > JSON: " + json);
 #endif
@@ -55,7 +60,35 @@ namespace PhpRunnerService
             return result.Data;
         }
 
-        public async Task<bool> Update<T>(string id, T obj)
+        public async Task<List<T>> Search<T>(string field, Enum.PhpRunnerFilter filter, string value)
+        {
+            string comp = $"({field}~{filter.Value}~{value})";
+            return await Search<T>(comp);
+        }
+
+        /// <summary>
+        /// Search By Ids PhpRunnerService
+        /// </summary>
+        /// <param name="value">Ex.: 2,3,6</param>
+        /// <returns>List<T></returns>
+        public async Task<List<T>> SearchByIds<T>(string value)
+        {
+            string[] list = value.Split(',');
+            string comp = "";
+            foreach (var item in list)
+            {
+                comp += $"(id~equals~{item})";
+            }
+            return await Search<T>(comp);
+        }
+
+        //public async Task<List<T>> SearchByIds<T>(string value)
+        //{
+        //    string comp = $"({field}~{filter.Value}~{value})";
+        //    return await Search<T>(comp);
+        //}
+
+        public async Task<bool> Update<T>(int id, T obj)
         {
             string objJson = JsonSerializer.Serialize(obj);
             Dictionary<string, object> dic = JsonSerializer.Deserialize<Dictionary<string, object>>(objJson);
@@ -91,7 +124,7 @@ namespace PhpRunnerService
             return result.Data;
         }
 
-        public async Task<bool> Delete<T>(string id)
+        public async Task<bool> Delete<T>(int id)
         {
             IPhpRunnerApi<DataPhpRunnerOne<T>> service = RestService.For<IPhpRunnerApi<DataPhpRunnerOne<T>>>(_httpClient);
             var json = await service.DeleteItem(typeof(T).Name.ToLower(), id).ConfigureAwait(false);
