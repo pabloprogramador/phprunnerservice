@@ -10,12 +10,14 @@ Console.WriteLine(user.Name);
 ```
 
 ## More options
+```csharp
 service.Get
 service.List
 service.Search
 service.Delete
 service.Insert
 service.Update
+```
 
 ## How to set
 ```csharp
