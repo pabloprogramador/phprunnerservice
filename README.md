@@ -16,7 +16,7 @@ PhpRunnerService service = new PhpRunnerService();
 ## How to model
 
 Example:
-```
+```csharp
 using System.Text.Json.Serialization;
 using static PhpRunnerService.Converters.JsonCustomConverters;
 
