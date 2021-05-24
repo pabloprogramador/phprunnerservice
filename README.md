@@ -28,6 +28,5 @@ public class Users
 
     [JsonPropertyName("name")]
     public string Name { get; set; }
-
 }
 ```
