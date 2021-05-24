@@ -3,10 +3,19 @@ https://github.com/pabloprogramador/phprunnerservice
 
 ## How to use
 ```csharp
+// Users = name of table
 // get user id = 1
-Models.Users user = await service.Get<Models.Users>(1);
+Users user = await service.Get<Users>(1);
 Console.WriteLine(user.Name);
 ```
+
+## More options
+service.Get
+service.List
+service.Search
+service.Delete
+service.Insert
+service.Update
 
 ## How to set
 ```csharp
