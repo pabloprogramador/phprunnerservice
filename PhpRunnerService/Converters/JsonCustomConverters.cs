@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -6,6 +7,39 @@ namespace PhpRunnerService.Converters
 {
     public class JsonCustomConverters
     {
+
+        //DateTime serverDate;
+        //    if(DateTime.TryParseExact(server +" +00:00", "yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out serverDate))
+        //    {
+
+        //    }
+
+        public class DateTimeConverter : JsonConverter<DateTime>
+        {
+
+            public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                DateTime serverDate = DateTime.Now;
+                if (reader.TokenType == JsonTokenType.String)
+                {
+                    string stringValue = reader.GetString();
+                    if (DateTime.TryParseExact(stringValue + " +00:00", "yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture, DateTimeStyles.None, out serverDate))
+                    {
+                        return serverDate;
+                    }
+                }
+                return serverDate;
+            }
+
+
+            public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+            {
+                //writer.WriteStringValue("");
+                writer.WriteNullValue();
+            }
+
+        }
+
         public class BoolConverter : JsonConverter<bool>
         {
             public override bool HandleNull => true;
